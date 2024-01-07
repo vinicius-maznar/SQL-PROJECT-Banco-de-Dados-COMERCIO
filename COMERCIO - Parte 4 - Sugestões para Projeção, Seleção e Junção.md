@@ -374,7 +374,7 @@ mysql> SELECT C.IDCLIENTE,C.NOME,C.SEXO,C.EMAIL,C.CPF,E.LOGRADOURO,E.BAIRRO,E.CI
 ```
 
 
-- **PASSO 2:** CORRIGINDO OS DADOS INCORRETOS DOS `IDs` SELECIONADOS (`16`);
+- **PASSO 1:** CORRIGINDO OS DADOS INCORRETOS DOS `IDs` SELECIONADOS (`16`);
 
     - Anota-se os `IDs` dos registros a serem alterados. Após, faz-se uma projeção dos `IDs` selecionados para a confirmação prévia a alteração.
 ```SQL
@@ -394,7 +394,7 @@ mysql> SELECT * FROM CLIENTE
 ```
 
 
-- **PASSO 3:** FAZENDO UM `UPDATE` PARA ALTERAR OS DADOS INCORRETOS DOS `IDs` SELECIONADOS (`16`);
+- **PASSO 2:** FAZENDO UM `UPDATE` PARA ALTERAR OS DADOS INCORRETOS DOS `IDs` SELECIONADOS (`16`);
 ```SQL
 /*INPUT*/
 UPDATE CLIENTE SET SEXO = 'M'
@@ -407,7 +407,7 @@ Query OK, 1 row affected (0.03 sec)
 Rows matched: 1  Changed: 1  Warnings: 0
 ```
 
-- **PASSO 4:** VERIFICANDO OS DADOS ATUALIZADOS DE ACORDO COM OS `IDs` SELECIONADOS (`12`, `13`, `18`, `19`);
+- **PASSO 3:** VERIFICANDO OS DADOS ATUALIZADOS DE ACORDO COM OS `IDs` SELECIONADOS (`12`, `13`, `18`, `19`);
 ```SQL
 /*INPUT*/
 SELECT * FROM CLIENTE
@@ -424,7 +424,7 @@ mysql> SELECT * FROM CLIENTE
 1 row in set (0.00 sec)
 ```
 
-- **PASSO 5:** TRAZENDO O RELATÓRIO CORRETO DE TODOS OS `CLIENTES`  DO SEXO `M` COM `TELEFONE` E `ENDERECO`;
+- **PASSO 4:** TRAZENDO O RELATÓRIO CORRETO DE TODOS OS `CLIENTES`  DO SEXO `M` COM `TELEFONE` E `ENDERECO`;
 ```SQL
 /*INPUT*/
 SELECT C.IDCLIENTE,C.NOME,C.SEXO,C.EMAIL,C.CPF,E.LOGRADOURO,E.BAIRRO,E.CIDADE,E.ESTADO,T.TIPO,T.NUMERO
@@ -463,7 +463,7 @@ mysql> SELECT C.IDCLIENTE,C.NOME,C.SEXO,C.EMAIL,C.CPF,E.LOGRADOURO,E.BAIRRO,E.CI
 13 rows in set (0.00 sec)
 ```
 
-## 🔨 **TAREFA 4:** PROJETE QUANTIDADE DE TODOS OS `HOMENS` E `MULHERES`;
+## 🔨 **TAREFA 5:** PROJETE QUANTIDADE DE TODOS OS `HOMENS` E `MULHERES`;
 
 ```SQL
 /*INPUT*/
@@ -483,3 +483,260 @@ mysql> SELECT COUNT(*) AS QUANTIDADE, SEXO
 +------------+------+
 2 rows in set (0.00 sec)
 ```
+
+
+## 🔨 **TAREFA 6:** TRAGA OS `IDs` E `EMAILs` DAS `MULHERES` QUE MOREM NO `CENTRO DO RIO DE JANEIRO` E `NÃO TENHAM CELULAR`;
+
+- **PASSO 1:** PARA A CONSTRUÇÃO DA QUERY, PROJETE TODAS AS INFORMAÇÕES NECESSÁRIAS, MESMO QUE ALGUMAS NÃO IRÃO APARECER MA QUERY FINAL.
+
+    - Usa-se essa primeira projeçao como referência para organizar a query principal;
+
+    - Aqui, será projetado um relatório completo, até com os clientes do sexo masculino, primeiramente.
+
+```SQL
+/*INPUT*/
+SELECT C.IDCLIENTE, C.EMAIL, C.NOME, C.SEXO
+FROM CLIENTE C
+INNER JOIN ENDERECO E
+ON C.IDCLIENTE = E.ID_CLIENTE
+INNER JOIN TELEFONE T
+ON C.IDCLIENTE = T.ID_CLIENTE;
+
+/*OUTPUT*/
+mysql> SELECT C.IDCLIENTE, C.EMAIL, C.NOME, C.SEXO
+    -> FROM CLIENTE C
+    -> INNER JOIN ENDERECO E
+    -> ON C.IDCLIENTE = E.ID_CLIENTE
+    -> INNER JOIN TELEFONE T
+    -> ON C.IDCLIENTE = T.ID_CLIENTE;
++-----------+-------------------+---------+------+
+| IDCLIENTE | EMAIL             | NOME    | SEXO |
++-----------+-------------------+---------+------+
+|         1 | JOAOA@IG.COM      | JOAO    | M    |
+|         1 | JOAOA@IG.COM      | JOAO    | M    |
+|         1 | JOAOA@IG.COM      | JOAO    | M    |
+|         2 | CARLOSA@IG.COM    | CARLOS  | M    |
+|         2 | CARLOSA@IG.COM    | CARLOS  | M    |
+|         3 | ANA@IG.COM        | ANA     | F    |
+|         3 | ANA@IG.COM        | ANA     | F    |
+|         5 | JORGE@IG.COM      | JORGE   | M    |
+|         5 | JORGE@IG.COM      | JORGE   | M    |
+|         5 | JORGE@IG.COM      | JORGE   | M    |
+|         9 | FLAVIO@IG.COM     | FLAVIO  | M    |
+|         9 | FLAVIO@IG.COM     | FLAVIO  | M    |
+|        11 | NULL              | GIOVANA | F    |
+|        11 | NULL              | GIOVANA | F    |
+|        11 | NULL              | GIOVANA | F    |
+|        12 | KARLA@GMAIL.COM   | KARLA   | F    |
+|        13 | DANIELE@GMAIL.COM | DANIELE | F    |
+|        15 | NULL              | EDUARDO | M    |
+|        16 | ANTONIO@IG.COM    | ANTONIO | M    |
+|        17 | ANTONIO@UOL.COM   | ANTONIO | M    |
+|        18 | ELAINE@GLOBO.COM  | ELAINE  | F    |
+|        19 | CARMEM@IG.COM     | CARMEM  | F    |
+|        19 | CARMEM@IG.COM     | CARMEM  | F    |
+|        20 | ADRIANA@GMAIL.COM | ADRIANA | F    |
+|        20 | ADRIANA@GMAIL.COM | ADRIANA | F    |
+|        21 | JOICE@GMAIL.COM   | JOICE   | F    |
++-----------+-------------------+---------+------+
+26 rows in set (0.00 sec)
+```
+
+
+- **PASSO 2:** PROJETANDO AS INFORMAÇÕES SOLICITADAS FILTRANDO PELO `SEXO FEMININO`;
+```SQL
+/*INPUT*/
+SELECT C.IDCLIENTE, C.EMAIL, C.NOME, C.SEXO
+FROM CLIENTE C
+INNER JOIN ENDERECO E
+ON C.IDCLIENTE = E.ID_CLIENTE
+INNER JOIN TELEFONE T
+ON C.IDCLIENTE = T.ID_CLIENTE
+WHERE SEXO = 'F';
+
+/*OUTPUT*/
+mysql> SELECT C.IDCLIENTE, C.EMAIL, C.NOME, C.SEXO
+    -> FROM CLIENTE C
+    -> INNER JOIN ENDERECO E
+    -> ON C.IDCLIENTE = E.ID_CLIENTE
+    -> INNER JOIN TELEFONE T
+    -> ON C.IDCLIENTE = T.ID_CLIENTE
+    -> WHERE SEXO = 'F';
++-----------+-------------------+---------+------+
+| IDCLIENTE | EMAIL             | NOME    | SEXO |
++-----------+-------------------+---------+------+
+|         3 | ANA@IG.COM        | ANA     | F    |
+|         3 | ANA@IG.COM        | ANA     | F    |
+|        11 | NULL              | GIOVANA | F    |
+|        11 | NULL              | GIOVANA | F    |
+|        11 | NULL              | GIOVANA | F    |
+|        12 | KARLA@GMAIL.COM   | KARLA   | F    |
+|        13 | DANIELE@GMAIL.COM | DANIELE | F    |
+|        18 | ELAINE@GLOBO.COM  | ELAINE  | F    |
+|        19 | CARMEM@IG.COM     | CARMEM  | F    |
+|        19 | CARMEM@IG.COM     | CARMEM  | F    |
+|        20 | ADRIANA@GMAIL.COM | ADRIANA | F    |
+|        20 | ADRIANA@GMAIL.COM | ADRIANA | F    |
+|        21 | JOICE@GMAIL.COM   | JOICE   | F    |
++-----------+-------------------+---------+------+
+13 rows in set (0.00 sec)
+```
+
+
+# ⚠ **NOTA 1: A IMPORTÂNCIA DE PROJETAR AS 'COLUNAS DE REFERÊNCIAS' DURANTE A CONSTRUÇÃO DE UMA QUERY**
+
+- No exemplo anterior, na coluna `EMAIL` aparecem alguns resultados nulo `NULL` que podem confundir sobre a veracidade dos dados projetados.
+
+- Com a projeção das outras colunas, mesmo que não solicitadas para a Query principal, a confirmação dos dados é facilitada, pois garantidos as informações que fazem referência ao que foi solicitado no requisito.
+
+
+- **PASSO 3:** ACRESCENTANDO MAIS FILTROS(`SEXO` = 'F', `BAIRRO` = 'CENTRO', `CIDADE` = 'RIO DE JANEIRO') E MAIS COLUNAS(`TIPO`, `BAIRRO`, `CIDADE`) PARA UMA BUSCA MAIS REFINADA;
+```SQL
+/*INPUT*/
+SELECT C.IDCLIENTE, C.EMAIL, C.NOME, C.SEXO, T.TIPO, E.BAIRRO,E.CIDADE
+FROM CLIENTE C
+INNER JOIN ENDERECO E
+ON C.IDCLIENTE = E.ID_CLIENTE
+INNER JOIN TELEFONE T
+ON C.IDCLIENTE = T.ID_CLIENTE
+WHERE SEXO = 'F'
+AND BAIRRO = 'CENTRO' AND CIDADE = 'RIO DE JANEIRO'
+AND TIPO = 'RES' OR TIPO = 'COM';
+
+/*OUTPUT*/
+mysql> SELECT C.IDCLIENTE, C.EMAIL, C.NOME, C.SEXO, T.TIPO, E.BAIRRO,E.CIDADE
+    -> FROM CLIENTE C
+    -> INNER JOIN ENDERECO E
+    -> ON C.IDCLIENTE = E.ID_CLIENTE
+    -> INNER JOIN TELEFONE T
+    -> ON C.IDCLIENTE = T.ID_CLIENTE
+    -> WHERE SEXO = 'F'
+    -> AND BAIRRO = 'CENTRO' AND CIDADE = 'RIO DE JANEIRO'
+    -> AND TIPO = 'RES' OR TIPO = 'COM';
++-----------+-------------------+---------+------+------+------------+----------------+
+| IDCLIENTE | EMAIL             | NOME    | SEXO | TIPO | BAIRRO     | CIDADE         |
++-----------+-------------------+---------+------+------+------------+----------------+
+|         1 | JOAOA@IG.COM      | JOAO    | M    | COM  | CENTRO     | RIO DE JANEIRO |
+|         2 | CARLOSA@IG.COM    | CARLOS  | M    | COM  | ESTACIO    | RIO DE JANEIRO |
+|        11 | NULL              | GIOVANA | F    | COM  | CENTRO     | RIO DE JANEIRO |
+|        12 | KARLA@GMAIL.COM   | KARLA   | F    | COM  | COPACABANA | RIO DE JANEIRO |
+|        13 | DANIELE@GMAIL.COM | DANIELE | F    | COM  | CENTRO     | VITORIA        |
+|        16 | ANTONIO@IG.COM    | ANTONIO | M    | COM  | JARDINS    | SAO PAULO      |
+|        19 | CARMEM@IG.COM     | CARMEM  | F    | RES  | CENTRO     | RIO DE JANEIRO |
+|        19 | CARMEM@IG.COM     | CARMEM  | F    | RES  | CENTRO     | RIO DE JANEIRO |
+|        20 | ADRIANA@GMAIL.COM | ADRIANA | F    | RES  | CENTRO     | RIO DE JANEIRO |
+|        20 | ADRIANA@GMAIL.COM | ADRIANA | F    | COM  | CENTRO     | RIO DE JANEIRO |
++-----------+-------------------+---------+------+------+------------+----------------+
+10 rows in set (0.00 sec)
+```
+
+# ⚠ **NOTA 2: SUBQUERY: CORRIJINDO O ERRO DE ANÁLISE DO EXEMPLO ACIMA**
+
+- 
+
+- 
+
+
+## 🔨 **TAREFA 7:** O SETOR SOLICITOU UM RELATÓRIO COM O `NOME`, `EMAIL` E `TELEFONE CELULAR` DOS CLIENTES QUE MORAM NO `ESTADO DO RIO DE JANEIRO`;
+
+```SQL
+/*INPUT*/
+SELECT C.NOME, C.EMAIL, T.NUMERO AS CELULAR
+FROM CLIENTE C
+INNER JOIN ENDERECO E
+ON C.IDCLIENTE = E.ID_CLIENTE
+INNER JOIN TELEFONE T
+ON C.IDCLIENTE = T.ID_CLIENTE
+WHERE TIPO = 'CEL' AND ESTADO = 'RJ';
+
+/*OUTPUT*/
+mysql> SELECT C.NOME, C.EMAIL, T.NUMERO AS CELULAR
+    -> FROM CLIENTE C
+    -> INNER JOIN ENDERECO E
+    -> ON C.IDCLIENTE = E.ID_CLIENTE
+    -> INNER JOIN TELEFONE T
+    -> ON C.IDCLIENTE = T.ID_CLIENTE
+    -> WHERE TIPO = 'CEL' AND ESTADO = 'RJ';
++---------+-----------------+----------+
+| NOME    | EMAIL           | CELULAR  |
++---------+-----------------+----------+
+| JOAO    | JOAOA@IG.COM    | 87866896 |
+| CARLOS  | CARLOSA@IG.COM  | 88687909 |
+| GIOVANA | NULL            | 33567765 |
+| GIOVANA | NULL            | 88668786 |
+| JOICE   | JOICE@GMAIL.COM | 44522578 |
++---------+-----------------+----------+
+5 rows in set (0.00 sec)
+```
+
+# ⚠ **NOTA 3: REGRAS PARA A PARTE `ORIGEM`(`FROM`) E `CONDIÇÃO`(`ON`)**
+
+- Na parte `ORIGEM`(`FROM`) da Query, sempre usa-se de refência a tabela que tiver mais ligações de dados entre as outras tabelas.
+
+- Na parte `CONDIÇÃO`(`ON`) as chaves iniciais na comparação (antes do sinal de `=`) devem ser da tabela que é usada na `ORIGEM`
+
+
+## 🔨 **TAREFA 8:** TRAGA UM RELATÓRIO COM O `NOME`, `EMAIL` E `TELEFONE CELULAR` DOS CLIENTES QUE MORAM NO `ESTADO DO RIO DE JANEIRO`;
+
+```SQL
+/*INPUT*/
+SELECT C.NOME, C.EMAIL, T.NUMERO AS CELULAR
+FROM CLIENTE C
+INNER JOIN ENDERECO E
+ON C.IDCLIENTE = E.ID_CLIENTE
+INNER JOIN TELEFONE T
+ON C.IDCLIENTE = T.ID_CLIENTE
+WHERE TIPO = 'CEL' AND ESTADO = 'RJ';
+
+/*OUTPUT*/
+mysql> SELECT C.NOME, C.EMAIL, T.NUMERO AS CELULAR
+    -> FROM CLIENTE C
+    -> INNER JOIN ENDERECO E
+    -> ON C.IDCLIENTE = E.ID_CLIENTE
+    -> INNER JOIN TELEFONE T
+    -> ON C.IDCLIENTE = T.ID_CLIENTE
+    -> WHERE TIPO = 'CEL' AND ESTADO = 'RJ';
++---------+-----------------+----------+
+| NOME    | EMAIL           | CELULAR  |
++---------+-----------------+----------+
+| JOAO    | JOAOA@IG.COM    | 87866896 |
+| CARLOS  | CARLOSA@IG.COM  | 88687909 |
+| GIOVANA | NULL            | 33567765 |
+| GIOVANA | NULL            | 88668786 |
+| JOICE   | JOICE@GMAIL.COM | 44522578 |
++---------+-----------------+----------+
+5 rows in set (0.00 sec)
+```
+
+
+## 🔨 **TAREFA 7:** TRAGA UM RELATÓRIO COM O `NOME`, `EMAIL` E `TELEFONE CELULAR` DAS `MULHERES` QUE MORAM NO `ESTADO DE SÃO PAULO`; 
+
+- **PASSO 1:** Faça uma projeção de referência;
+```SQL
+/*INPUT*/
+SELECT C.NOME, C.EMAIL, C.SEXO, E.ESTADO, T.NUMERO AS CELULAR
+FROM CLIENTE C
+INNER JOIN ENDERECO E
+ON C.IDCLIENTE = E.ID_CLIENTE
+INNER JOIN TELEFONE T
+ON C.IDCLIENTE = T.ID_CLIENTE
+WHERE SEXO = 'F' AND ESTADO = 'SP';
+
+/*OUTPUT*/
+mysql> SELECT C.NOME, C.EMAIL, C.SEXO, E.ESTADO, T.NUMERO AS CELULAR
+    -> FROM CLIENTE C
+    -> INNER JOIN ENDERECO E
+    -> ON C.IDCLIENTE = E.ID_CLIENTE
+    -> INNER JOIN TELEFONE T
+    -> ON C.IDCLIENTE = T.ID_CLIENTE
+    -> WHERE SEXO = 'F' AND ESTADO = 'SP';
++--------+------------------+------+--------+----------+
+| NOME   | EMAIL            | SEXO | ESTADO | CELULAR  |
++--------+------------------+------+--------+----------+
+| ANA    | ANA@IG.COM       | F    | SP     | 78989765 |
+| ANA    | ANA@IG.COM       | F    | SP     | 99766676 |
+| ELAINE | ELAINE@GLOBO.COM | F    | SP     | 89955665 |
++--------+------------------+------+--------+----------+
+3 rows in set (0.00 sec)
+```
+
