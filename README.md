@@ -1,4 +1,4 @@
-# 🗄🎲 **Projeto de Banco de Dados para Comércio - Tutorial SQL**
+# 🗄🎲 **Projeto de Banco de Dados Simples para Gerenciamento de Comércio - Tutorial SQL**
 
 Este repositório abriga um projeto de banco de dados destinado a um comércio, oferecendo um guia passo a passo para a criação, alimentação de dados e manutenção do sistema. O projeto tem como objetivo proporcionar uma compreensão abrangente das práticas essenciais de SQL aplicadas a um contexto empresarial.
 
